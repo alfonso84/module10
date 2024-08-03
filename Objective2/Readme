@@ -1,0 +1,95 @@
+# Guía de Configuración y Seguridad para EC2 y AWS
+
+Este repositorio contiene scripts diseñados para automatizar la configuración y seguridad de una instancia EC2 en Ubuntu, así como para gestionar recursos en AWS. A continuación se detallan los scripts y las suposiciones consideradas.
+
+## Contenidos
+
+1. [Suposiciones y Consideraciones](#suposiciones-y-consideraciones)
+2. [Scripts](#scripts)
+   - [setup_ec2_environment.sh](#setup_ec2_environmentsh)
+   - [setup_aws_cli.sh](#setup_aws_clish)
+   - [setup_aws_resources.sh](#setup_aws_resourcessh)
+3. [Ejecución de Scripts](#ejecución-de-scripts)
+
+## Suposiciones y Consideraciones
+
+1. **Entorno de Ejecución**:
+   - Todos los scripts están diseñados para ejecutarse en una instancia **Ubuntu**.
+   - Los paquetes y herramientas instalados están orientados a un entorno típico de Ubuntu.
+
+2. **Configuración de AWS CLI**:
+   - Los scripts requieren credenciales de AWS para configurar AWS CLI. El primer script (`setup_ec2_environment.sh`) crea un usuario en AWS IAM y genera las claves de acceso necesarias.
+   - Las credenciales generadas son automáticamente configuradas para el uso en AWS CLI por el segundo script (`setup_aws_cli.sh`).
+
+3. **Configuración de Seguridad**:
+   - El primer script incluye configuraciones de seguridad como SELinux y autenticación multifactor. En Ubuntu, SELinux se configura como una opción, pero si prefieres usar AppArmor, podrías necesitar ajustar la configuración.
+   - Los rangos de IP para Rusia y China se han incluido como ejemplos y deben actualizarse según las necesidades de seguridad específicas.
+
+4. **Permisos y Herramientas**:
+   - Los scripts deben ejecutarse con permisos adecuados para realizar cambios en la configuración del sistema y en AWS.
+   - El script para instalar AWS CLI asegura que esté presente en el sistema y correctamente configurado con las credenciales de AWS.
+
+## Scripts
+
+### `setup_ec2_environment.sh`
+
+**Propósito**:
+Este script configura el entorno básico de una instancia EC2 con Ubuntu. Instala herramientas esenciales, configura la seguridad del sistema, y establece AWS CLI.
+
+**Acciones**:
+- Actualiza el sistema y las herramientas básicas.
+- Instala y configura SELinux (opcional, Ubuntu usa AppArmor por defecto).
+- Configura autenticación multifactor para SSH.
+- Configura el acceso SSH y el firewall.
+- Crea un usuario `admin`, genera claves de acceso para AWS y configura AWS CLI con esas claves.
+
+**Suposiciones**:
+- Se asume que el usuario tiene permisos para instalar paquetes y configurar el sistema.
+- Las claves de acceso AWS se crean y configuran en el script.
+
+### `setup_aws_cli.sh`
+
+**Propósito**:
+Este script asegura que AWS CLI esté instalado y configurado correctamente utilizando las credenciales generadas por el script `setup_ec2_environment.sh`.
+
+**Acciones**:
+- Verifica si AWS CLI está instalado y lo instala si es necesario.
+- Configura AWS CLI utilizando las variables de entorno creadas por el primer script.
+
+**Suposiciones**:
+- El archivo `aws_env_variables.sh` se ha creado previamente con las credenciales y parámetros necesarios.
+- AWS CLI se configura con las credenciales generadas en el primer script.
+
+### `setup_aws_resources.sh`
+
+**Propósito**:
+Este script utiliza las variables de entorno para crear y configurar recursos en AWS, como buckets de S3 y roles IAM.
+
+**Acciones**:
+- Crea un bucket S3 en AWS.
+- Crea un rol IAM y adjunta una política de confianza.
+- Crea y adjunta una política al rol IAM para acceso a S3.
+
+**Suposiciones**:
+- El archivo `aws_env_variables.sh` contiene las credenciales de AWS y otros parámetros necesarios.
+- AWS CLI está configurado correctamente para interactuar con AWS.
+
+## Ejecución de Scripts
+
+1. **Ejecutar `setup_ec2_environment.sh`**:
+   Este es el primer script a ejecutar. Configura el entorno en la instancia EC2, instala las herramientas necesarias, y establece AWS CLI con credenciales generadas.
+
+   ```bash
+   bash setup_ec2_environment.sh
+2. **Ejecutar `setup_aws_cli.sh`**:
+   Ejecuta este script después del anterior para asegurar que AWS CLI esté configurado correctamente con las credenciales generadas.
+
+   ```bash
+   bash setup_aws_cli.sh
+
+3. **Ejecutar `setup_aws_resources.sh`**:
+   Finalmente, ejecuta este script para crear y configurar los recursos en AWS usando las variables de entorno definidas.
+
+   ```bash
+   bash setup_aws_resources.sh
+
