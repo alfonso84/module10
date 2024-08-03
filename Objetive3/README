@@ -1,0 +1,80 @@
+# Descripción del Script de Configuración y Seguridad en AWS
+
+Este script automatiza la configuración de una instancia EC2 y la configuración de varios recursos de seguridad y gestión en AWS. A continuación se detalla cada sección y las acciones realizadas por el script.
+
+## 1. Configuración de Variables
+
+Define las siguientes variables:
+
+- **REGION**: Región de AWS donde se crearán los recursos.
+- **INSTANCE_TYPE**: Tipo de instancia EC2.
+- **AMI_ID**: ID de la Amazon Machine Image (AMI) que se usará para lanzar la instancia EC2.
+- **KEY_NAME**: Nombre del par de claves para la instancia EC2.
+- **SECURITY_GROUP_NAME**: Nombre del grupo de seguridad que se creará para la instancia EC2.
+- **BUCKET_NAME**: Nombre del bucket S3 que se creará.
+- **DB_INSTANCE_ID**: Identificador de la instancia de base de datos RDS.
+- **DB_USERNAME**: Nombre de usuario para la base de datos RDS.
+- **DB_PASSWORD**: Contraseña para la base de datos RDS.
+- **WEB_ACL_NAME**: Nombre de la AWS WAF Web ACL.
+- **PROTECTION_NAME**: Nombre de la protección de AWS Shield.
+- **INSPECTOR_TARGET_NAME**: Nombre del objetivo de AWS Inspector.
+- **INSPECTOR_TEMPLATE_NAME**: Nombre de la plantilla de AWS Inspector.
+- **IP_SET_NAME**: Nombre del IP Set para AWS WAF.
+
+## 2. Creación de Instancia EC2
+
+- **Acción**: Crea una instancia EC2 utilizando el ID de la AMI, el tipo de instancia y el par de claves especificados.
+- **Salida**: ID de la instancia EC2 creada.
+
+## 3. Configuración del Grupo de Seguridad
+
+- **Acción**: Autoriza el tráfico entrante a los puertos 22 (SSH), 80 (HTTP) y 443 (HTTPS).
+- **Salida**: ID del grupo de seguridad.
+
+## 4. Creación de Bucket S3 con Cifrado
+
+- **Acción**: Crea un bucket S3 y configura el cifrado del lado del servidor con AES-256.
+- **Salida**: Nombre del bucket S3 creado.
+
+## 5. Configuración de Instancia RDS
+
+- **Acción**: Crea una instancia de base de datos RDS con backups automáticos habilitados.
+- **Salida**: Identificador de la instancia RDS creada.
+
+## 6. Configuración de AWS CloudTrail
+
+- **Acción**: Crea un bucket S3 para AWS CloudTrail y configura el registro de eventos.
+- **Salida**: Nombre del bucket S3 para CloudTrail.
+
+## 7. Configuración de Alarma en CloudWatch
+
+- **Acción**: Crea una alarma de CloudWatch para monitorear la utilización de CPU de la instancia EC2.
+- **Salida**: Nombre de la alarma de CloudWatch.
+
+## 8. Configuración de AWS Shield y WAF
+
+- **Acción**: Configura AWS Shield para proteger la instancia EC2 y crea una Web ACL en AWS WAF.
+- **Salida**: Nombre de la Web ACL y protección de Shield.
+
+## 9. Configuración de AWS Inspector
+
+- **Acción**: Crea un objetivo de evaluación y una plantilla de evaluación en AWS Inspector.
+- **Salida**: Nombre del objetivo y la plantilla de evaluación.
+
+## 10. Creación de IP Set para AWS WAF
+
+- **Acción**: Crea un IP Set en AWS WAF para denegar IPs específicas.
+- **Salida**: Nombre del IP Set creado.
+
+## 11. Instalación de AWS CLI y Configuración de Credenciales
+
+- **Acción**: Instala AWS CLI y configura las credenciales usando las claves de acceso creadas.
+- **Salida**: Credenciales de AWS configuradas.
+
+## Notas
+
+- **Reemplazos Necesarios**: Asegúrate de reemplazar las variables `<account-id>`, `<vpc_id>`, `<nacl_id>`, y otras con valores específicos para tu entorno.
+- **Instalación de Herramientas**: Este script está diseñado para ejecutarse en una instancia Ubuntu y requiere permisos adecuados para crear y modificar recursos en AWS.
+- **Ejecutar el Script**: Realiza pruebas en un entorno de desarrollo antes de implementarlo en producción para asegurar que cumple con las políticas y necesidades de seguridad de tu organización.
+
+Este script proporciona una solución completa para la configuración y seguridad en AWS, asegurando la protección de los recursos y la adecuada gestión de la infraestructura.
